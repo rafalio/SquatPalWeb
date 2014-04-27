@@ -11,17 +11,12 @@ Email
 ExerciseType
   name Text
   createdBy UserId
+  UniqueExerciseType name createdBy
 Exercise
+  userId       UserId
   exerciseType ExerciseTypeId
-  weight       Int
-  weps         Int
+  weight       Weight
+  reps         Int
   started      UTCTime
-UserExercise
-   userId            UserId
-   exerciseTypeId    ExerciseTypeId
-   UniqueUserExercise userId exerciseTypeId
-
-
-
 
  -- By default this file is used in Model.hs (which is imported by Foundation.hs)

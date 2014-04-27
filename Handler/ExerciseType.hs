@@ -12,10 +12,12 @@ exerciseTypeForm = renderDivs $ ExerciseType <$>
 postExerciseTypeR :: Handler Html
 postExerciseTypeR = do
     ((result, widget),enctype) <- runFormPost exerciseTypeForm 
+    userId <- requireAuthId
     case result of
         FormSuccess extype -> do
-            exTypeId <- runDB $ insert extype
-            setMessage "Exercise succesfuly created!"
+            runDB (insertUnique extype) >>= maybe 
+                                            (setMessage "You already have an exercise with this name.") 
+                                            (const $ setMessage "Exercise succesfuly created")
         _ -> setMessage "There was a problem making your exercise"
     redirect ExerciseTypeR
         
