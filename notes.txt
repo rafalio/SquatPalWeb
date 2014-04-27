@@ -1,0 +1,19 @@
+Idea:
+
+User can create his own exercises, and then track them
+
+
+ExerciseType
+  name Text
+
+Exercise
+  exerciseType ExerciseTypeId
+  weight       Int
+  weps         Int
+  started      UTCTime
+
+
+UserExercise
+   userId             UserId
+   exerciseTypeId     ExerciseTypeId
+   UniqueUserExercise userId exerciseTypeId

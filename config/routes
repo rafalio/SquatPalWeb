@@ -1,0 +1,14 @@
+/static StaticR Static getStatic
+/auth   AuthR   Auth   getAuth
+
+/favicon.ico FaviconR GET
+/robots.txt RobotsR GET
+
+/ HomeR GET
+/about                       AboutR GET
+
+/exerciseTypes                 ExerciseTypeR GET POST
+/exerciseTypes/#ExerciseTypeId ExerciseTypeSingleR GET DELETE
+
+/workouts                    WorkoutsR GET POST
+/workouts/#ExerciseId        ExerciseR GET
