@@ -1,6 +1,7 @@
 User
     ident Text
     password Text Maybe
+    weightPref WeightPref
     UniqueUser ident
     deriving Typeable
 Email
@@ -17,6 +18,7 @@ Exercise
   exerciseType ExerciseTypeId
   weight       Weight
   reps         Int
+  notes        Textarea Maybe
   started      UTCTime
   deriving (Show)
 

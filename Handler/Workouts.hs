@@ -29,6 +29,7 @@ logExerciseForm uid = renderDivs $ Exercise <$>
     areq (selectField exerciseTypes) "Exercise Type" Nothing <*>
     areq intField "Weight" Nothing <*>
     areq intField "Reps"   Nothing <*>
+    aopt textareaField "Notes" Nothing <*>
     lift (liftIO getCurrentTime)
     where
         exerciseTypes = do
@@ -45,4 +46,3 @@ postWorkoutsR = do
             setMessage "Succesfuly added your exercise!"
         _ -> setMessage "There was a problem making your exercise"
     redirect WorkoutsR 
- 

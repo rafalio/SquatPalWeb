@@ -1,5 +1,3 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-
 module ModelTypes where
 
 -- We need this to be in a separate module to get 
@@ -7,9 +5,14 @@ module ModelTypes where
 
 import Prelude
 import Database.Persist.Sql
+import Database.Persist.TH
 
 -- Internally, store everything in grams
-{-newtype Weight = Grams Int-}
-  {-deriving (Read, Show, Eq, Num, PersistField, PersistFieldSql)-}
+newtype Weight = Kilograms Int
+  deriving (Read, Show, Eq, Enum, Ord, Num, Real, Integral, PersistField, PersistFieldSql)
 
-type Weight = Int
+data WeightPref = Kg | Lbs
+    deriving (Show, Read, Eq, Enum, Bounded)
+derivePersistField("WeightPref")
+
+{-type Weight = Int-}

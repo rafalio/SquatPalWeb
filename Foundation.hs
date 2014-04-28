@@ -16,9 +16,11 @@ import Database.Persist.Sql (SqlPersistT)
 import Settings.StaticFiles
 import Settings (widgetFile, Extra (..))
 import Model
+import ModelTypes
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
+import Control.Applicative
 {-import Data.Text-}
 
 -- | The site argument for your application. This can be a good place to
@@ -135,6 +137,7 @@ instance YesodAuth App where
                 fmap Just $ insert User
                     { userIdent = credsIdent creds
                     , userPassword = Nothing
+                    , userWeightPref = Kg
                     }
 
 
@@ -151,6 +154,10 @@ instance YesodAuth App where
 -- achieve customized and internationalized form validation messages.
 instance RenderMessage App FormMessage where
     renderMessage _ _ = defaultFormMessage
+
+
+requireUser :: Handler User
+requireUser = entityVal <$> requireAuth
 
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
