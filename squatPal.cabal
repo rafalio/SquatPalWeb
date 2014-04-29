@@ -74,6 +74,7 @@ library
                  , fast-logger                   >= 2.1.4      && < 2.2
                  , wai-logger                    >= 2.1        && < 2.2
                  , time
+                 , esqueleto
 
 executable         squatPal
     if flag(library-only)

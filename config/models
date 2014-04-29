@@ -13,9 +13,10 @@ ExerciseType
   name Text
   createdBy UserId
   UniqueExerciseType name createdBy
+  deriving (Show)
 Exercise
   userId       UserId
-  exerciseType ExerciseTypeId
+  kindId       ExerciseTypeId
   weight       Weight
   reps         Int
   notes        Textarea Maybe
