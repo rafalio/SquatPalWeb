@@ -33,49 +33,13 @@ workouts = do
     |]
 
 
-{-currentUserWorkouts = do-}
-    {-userId <- requireAuthId -}
-    {-exerciseEntities <- runDB $ selectList [ExerciseUserId ==. userId] []-}
-    {-let exTypeIds = map (exerciseExerciseType . entityVal) exerciseEntities-}
-    {-exerciseTypes <- runDB $ selectList [ExerciseTypeId <-. exTypeIds] []-}
-    {-let l = map (\(Entity k v) -> (k,v)) exerciseTypes-}
-    {-let l' = map (flip lookup $ l) exTypeIds-}
-    {-return $ zip exerciseEntities l'-}
- 
-
-
-{-currentUserWorkouts = do-}
-    {-userId <- requireAuthId -}
-    {-exerciseEntities <- runDB $ selectList [ExerciseUserId ==. userId] []-}
-    {-let exTypeIds = map (exerciseExerciseType . entityVal) exerciseEntities-}
-    {-exerciseTypes <- runDB $ selectList [ExerciseTypeId <-. exTypeIds] []-}
-    {-return $ joinTables exerciseExerciseType exerciseEntities exerciseTypes-}
-   
- 
-currentUserWorkouts = requireAuthId >>= (runDB . exercisesForUserId)
-    {-uid <- requireAuthId-}
-    {-k <- runDB (exercisesForUserId uid)-}
-    {-return $ k-}
-
-{-joinTables :: (a -> Key b) -> [Entity a] -> [Entity b] -> [(Entity a, Maybe (Entity b))]-}
-{-joinTables f as bs =-}
-    {-let keys   = map (f . entityVal) as-}
-        {-bMap   = map (\e@(Entity k _) -> (k,e)) bs-}
-        {-rest   = map (flip lookup $ bMap) keys-}
-    {-in zip as rest -}
-
-
+currentUserWorkouts = requireAuthId >>= exercisesForUserId
 
 {-exercisesForUserId :: t-}
-exercisesForUserId uid = do
+exercisesForUserId uid = runDB $ 
     E.select $ E.from $ \(e,et) -> do
     E.where_ ( (e E.^. ExerciseUserId E.==. E.val uid) E.&&. (e E.^. ExerciseKindId E.==. et E.^. ExerciseTypeId) )
     return (e,et)
-
-{-test = do-}
-    {-people <- E.select $ -}
-              {-E.from $ \a -> return a-}
-    {-liftIO $ mapM_ (putStrLn . show . exerciseWeight . entityVal) people-}
 
 
 hConfig = BootstrapHorizontalForm (ColMd 2) (ColMd 4) (ColXs 2) (ColXs 3)
