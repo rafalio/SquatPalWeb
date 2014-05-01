@@ -82,7 +82,7 @@ instance Yesod App where
             $(widgetFile "default-layout")
         loggedIn <- isJust <$> maybeAuthId
         username <- maybe "" userIdent <$> maybeUser
-        {-let navbar <- toWidgetBody ($(widgetFile "navbar"))-}
+
         let navbar = $(hamletFile "templates/navbar.hamlet")
         let footer = $(hamletFile "templates/footer.hamlet")
 
