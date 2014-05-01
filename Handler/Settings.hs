@@ -30,5 +30,5 @@ postSettingsR = do
       FormSuccess wPref -> do
           runDB $ update uid [UserWeightPref =. wPref]
           setMessageT MsgSuccess "Succesfully updated"
-          redirect SettingsR
-      _ -> setMessageT MsgError "There was a problem updating your preference" >> redirect SettingsR
+      _ -> setMessageT MsgError "There was a problem updating your preference"
+    redirect SettingsR
