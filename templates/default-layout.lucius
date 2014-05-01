@@ -2,3 +2,6 @@
     margin-top: 70px;
 }
 
+footer{
+    text-align: center;
+}

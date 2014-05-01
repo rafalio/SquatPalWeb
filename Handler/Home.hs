@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections, OverloadedStrings #-}
+{-# OverloadedStrings #-}
 module Handler.Home where
 
 import Import
@@ -14,10 +14,6 @@ import Data.Maybe
 -- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
 getHomeR = do
-    maid <- maybeAuthId
     defaultLayout $ do
         setTitle "SquatPal | Track your workouts"
-        [whamlet|
-        <p> Your current auth ID: #{show maid}
-        |]
         $(widgetFile "homepage")
