@@ -29,7 +29,6 @@ instance ToValue NotificationMsgType where
     toValue MsgError       = "alert-danger"
 
 
--- Set a flash message with a type (Error/Success etc)
--- It will render appropriately
+-- Set a flash message with a type (Error/Success etc). It will render appropriately
 setMessageT :: (MonadHandler m) => NotificationMsgType -> Html -> m ()
 setMessageT typ text = setMessage $ toMarkup $ NotificationMessage typ text
