@@ -82,6 +82,8 @@ instance Yesod App where
             $(widgetFile "default-layout")
         loggedIn <- isJust <$> maybeAuthId
         username <- maybe "" userIdent <$> maybeUser
+        {-let navbar <- toWidgetBody ($(widgetFile "navbar"))-}
+        let navbar = $(hamletFile "templates/navbar.hamlet")
         giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
     -- This is done to provide an optimization for serving static files from

@@ -19,34 +19,8 @@ $newline never
         <script>
           document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
     <body>
-        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/">SquatPal
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-                        <span class="sr-only">Toggle navigation
-                        <span class="icon-bar">
-                        <span class="icon-bar">
-                        <span class="icon-bar">
-                <div class="navbar-collapse collapse" id="navbar-main">
-                    $if loggedIn
-                        <ul class="nav navbar-nav">
-                            <li>
-                                <a href=@{WorkoutsR}>Workouts
-                            <li>
-                                <a href=@{ExerciseTypeR}>Your exercises
-                            <li>
-                                <a href=@{AboutR}>About
-                    <ul class="nav navbar-nav navbar-right">
-                        $if loggedIn
-                            <li>
-                                <a href="">Hello #{username}
-                            <li>
-                                <a href=@{AuthR LogoutR}>Logout
-                        $else 
-                            <li>
-                                <a href=@{AuthR LoginR}>Login
-        <div#content class="container">
+       ^{navbar}
+       <div#content class="container">
             <div>
               ^{pageBody pc}
            <footer>
