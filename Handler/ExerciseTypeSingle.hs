@@ -10,8 +10,8 @@ deleteExerciseTypeSingleR :: ExerciseTypeId -> Handler Html
 deleteExerciseTypeSingleR eid = do
     c <- runDB $ count [ExerciseKindId ==. eid]
     when (c > 0) $ do
-       setMessage "You cannot delete an exercise type that has associated exercises"
+       setMessageT MsgError "You cannot delete an exercise type that has associated exercises"
        redirect ExerciseTypeR 
     runDB $ delete eid
-    setMessage "Succesfuly deleted"
+    setMessageT MsgSuccess "Succesfuly deleted"
     redirect ExerciseTypeR

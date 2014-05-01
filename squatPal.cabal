@@ -26,6 +26,7 @@ library
                      Handler.ExerciseType
                      Handler.ExerciseTypeSingle
                      Handler.Settings
+                     Notifications
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -75,6 +76,8 @@ library
                  , wai-logger                    >= 2.1        && < 2.2
                  , time
                  , esqueleto
+                 , blaze-markup 
+                 , blaze-html
 
 executable         squatPal
     if flag(library-only)

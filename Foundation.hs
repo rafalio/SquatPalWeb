@@ -1,3 +1,5 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 module Foundation where
 
 import Prelude
@@ -20,8 +22,15 @@ import ModelTypes
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
+
 import Control.Applicative
 import Data.Maybe
+import Data.Text
+import Text.Blaze
+import qualified Text.Blaze.Html5 as Blaze
+import qualified Text.Blaze.Html5.Attributes as Blaze
+
+
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -166,18 +175,8 @@ requireUser :: Handler User
 requireUser = entityVal <$> requireAuth
 
 maybeUser :: Handler (Maybe User)
-maybeUser = do
-  mu <- maybeAuth
-  return (entityVal <$> mu)
-
+maybeUser = maybeAuth >>= return . fmap entityVal
 
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
-
--- Note: previous versions of the scaffolding included a deliver function to
--- send emails. Unfortunately, there are too many different options for us to
--- give a reasonable default. Instead, the information is available on the
--- wiki:
---
--- https://github.com/yesodweb/yesod/wiki/Sending-email
