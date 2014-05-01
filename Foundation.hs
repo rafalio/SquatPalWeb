@@ -21,6 +21,7 @@ import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 import Control.Applicative
+import Data.Maybe
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -79,6 +80,8 @@ instance Yesod App where
                 {-, css_bootstrap_css-}
                 {-])-}
             $(widgetFile "default-layout")
+        loggedIn <- isJust <$> maybeAuthId
+        username <- maybe "" userIdent <$> maybeUser
         giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
     -- This is done to provide an optimization for serving static files from
@@ -157,6 +160,12 @@ instance RenderMessage App FormMessage where
 
 requireUser :: Handler User
 requireUser = entityVal <$> requireAuth
+
+maybeUser :: Handler (Maybe User)
+maybeUser = do
+  mu <- maybeAuth
+  return (entityVal <$> mu)
+
 
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra

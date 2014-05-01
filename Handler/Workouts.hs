@@ -27,15 +27,18 @@ workouts = do
     both <- handlerToWidget $ currentUserWorkouts
     [whamlet|
         <p> Your past exercises:
-        $forall t <- both
+        $forall (e,et) <- entityVal2 both
             <div.well>
-                #{show t}
+                #{exerciseTypeName et} #{exerciseReps e} x #{unKilo (exerciseWeight e)}
     |]
 
 
+entityVal2 = map f2
+  where f2 (a,b) = (entityVal a, entityVal b)
+{-entityVal3 (a,b,c) = (entityVal a, entityVal b, entityVal c)-}
+
 currentUserWorkouts = requireAuthId >>= exercisesForUserId
 
-{-exercisesForUserId :: t-}
 exercisesForUserId uid = runDB $ 
     E.select $ E.from $ \(e,et) -> do
     E.where_ ( (e E.^. ExerciseUserId E.==. E.val uid) E.&&. (e E.^. ExerciseKindId E.==. et E.^. ExerciseTypeId) )
