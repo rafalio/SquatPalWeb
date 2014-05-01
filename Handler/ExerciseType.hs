@@ -6,7 +6,8 @@ import Yesod.Auth
 exerciseTypeForm :: Form ExerciseType
 exerciseTypeForm = renderDivs $ ExerciseType <$> 
     areq textField "Exercise Name" Nothing <*>
-    lift requireAuthId
+    lift requireAuthId <*>
+    pure WithWeight
 
 
 postExerciseTypeR :: Handler Html
@@ -33,7 +34,7 @@ getExerciseTypeR = do
                 ^{widget}
                 <button>Submit
             <p> Your exercises:
-            $forall (Entity id (ExerciseType name _)) <- yourExercises
+            $forall (Entity id (ExerciseType name _ _)) <- yourExercises
                 #{name}
                 <form style="display:inline" method=post action=@{ExerciseTypeSingleR id}?_method=DELETE>
                   <button>Delete

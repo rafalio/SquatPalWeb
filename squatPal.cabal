@@ -27,6 +27,7 @@ library
                      Handler.ExerciseTypeSingle
                      Handler.Settings
                      Notifications
+                     Utilities
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

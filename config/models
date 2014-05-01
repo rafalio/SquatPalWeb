@@ -10,8 +10,9 @@ Email
     verkey Text Maybe
     UniqueEmail email
 ExerciseType
-  name Text
-  createdBy UserId
+  name          Text
+  createdBy     UserId
+  kind          ExKind
   UniqueExerciseType name createdBy
   deriving (Show)
 Exercise

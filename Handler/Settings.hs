@@ -17,7 +17,7 @@ getSettingsR = do
 weightPrefForm :: Maybe User -> Form WeightPref
 weightPrefForm mu = renderDivs $ 
     areq 
-        (selectFieldList ([("Kilograms",Kg), ("Pounds",Lbs)] :: [(Text,WeightPref)]) )
+        (selectFieldList enumTypeTuples)
         "Weight unit" 
         (userWeightPref <$> mu)
 
@@ -29,6 +29,6 @@ postSettingsR = do
     case result of
       FormSuccess wPref -> do
           runDB $ update uid [UserWeightPref =. wPref]
-          setMessage "Succesfully updated"
+          setMessageT MsgSuccess "Succesfully updated"
           redirect SettingsR
-      _ -> setMessage "There was a problem updating your preference" >> redirect SettingsR
+      _ -> setMessageT MsgError "There was a problem updating your preference" >> redirect SettingsR

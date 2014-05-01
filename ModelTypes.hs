@@ -15,4 +15,10 @@ data WeightPref = Kg | Lbs
     deriving (Show, Read, Eq, Enum, Bounded)
 derivePersistField("WeightPref")
 
+
+data ExKind = WithWeight | NoWeight
+    deriving (Show, Read, Eq, Enum, Bounded)
+derivePersistField("ExKind")
+
+
 {-type Weight = Int-}
