@@ -20,8 +20,7 @@
                         <a href=@{AboutR}>About
             <ul class="nav navbar-nav navbar-right">
                 $if loggedIn
-                    <li>
-                        <a href="">Hello #{username}
+                    <p.navbar-text>Hello #{username}
                     <li>
                         <a href=@{AuthR LogoutR}>Logout
                 $else 

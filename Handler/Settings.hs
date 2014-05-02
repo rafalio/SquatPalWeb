@@ -14,11 +14,10 @@ getSettingsR = do
 
     defaultLayout $ do
         [whamlet|
+        <div.well>
             <form method=post action=@{SettingsR}>
                 ^{form}
                 <button>Change
-        |]
-        [whamlet|
              <form method=post action=@{ExerciseTypeR} enctype=#{enctype1}>
                  ^{widget}
                  <button>Submit
