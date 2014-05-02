@@ -8,8 +8,8 @@ import Database.Persist.Sql
 import Database.Persist.TH
 
 -- Internally, store everything in grams
-newtype Weight = Kilograms {unKilo :: Int}
-  deriving (Read, Show, Eq, Enum, Ord, Num, Real, Integral, PersistField, PersistFieldSql)
+newtype Weight = Kilograms {unKilo :: Double}
+  deriving (Read, Show, Eq, Ord, Num, Real, PersistField, PersistFieldSql)
 
 data WeightPref = Kg | Lbs
     deriving (Show, Read, Eq, Enum, Bounded)

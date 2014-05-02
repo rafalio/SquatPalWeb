@@ -16,3 +16,10 @@ entityVal2 = map f2
 
 entityVal3 = map f3
     where f3 (a,b,c) = (entityVal a, entityVal b, entityVal c)
+
+
+lbs2kg :: Double -> Double
+lbs2kg = (*0.45359237)
+
+kg2lbs :: Double -> Double
+kg2lbs = (/0.45359237)

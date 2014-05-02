@@ -5,6 +5,7 @@ import Import
 import Yesod.Auth
 import Control.Arrow
 import Data.Time
+import qualified Data.Text.Read
 
 getLogR :: Handler Html
 getLogR = do
@@ -29,43 +30,32 @@ getLogR = do
 
 postLogR :: Handler Html
 postLogR = do 
-    uid <- requireAuthId
-    ((result, widget),enctype) <- runFormPost (logExerciseForm uid)
+    uid  <- requireAuthId
+    user <- requireUser
+    ((result, widget),enctype) <- runFormPost logExerciseFormM
+    let weightPref = userWeightPref user
+
     case result of
         FormSuccess newExercise -> do
             runDB (insert newExercise)
             setMessageT MsgSuccess "Succesfuly added your exercise!"
-        _ -> setMessageT MsgError "There was a problem making your exercise"
+        FormFailure ts -> setMessageT MsgError (toHtml . mconcat $ ts)
+        _ -> setMessageT MsgError "There was a problem saving your exercise"
     redirect LogR
-
-
-
-hConfig = BootstrapHorizontalForm (ColMd 2) (ColMd 4) (ColXs 2) (ColXs 3)
-
-logExerciseForm :: UserId -> Form Exercise
-logExerciseForm uid = renderBootstrap3 hConfig $ Exercise <$>
-        pure uid <*>
-        areq (selectField exerciseTypes) (bfs ("Exercise Type"::Text)) Nothing <*>
-        areq intField (bfs ("Weight"::Text)) Nothing <*>
-        areq intField (bfs ("Reps"::Text)) Nothing <*>
-        pure Nothing <*>
-        lift (liftIO getCurrentTime) <*
-        (bootstrapSubmit ("add" :: BootstrapSubmit Text))
-        where
-            exerciseTypes = do
-                exercisesForUser <- runDB $ selectList [ExerciseTypeCreatedBy ==. uid] []
-                optionsPairs $ map ((exerciseTypeName . entityVal) &&& entityKey) exercisesForUser
-
 
 
 logExerciseFormM :: Form Exercise
 logExerciseFormM extra = do
+
     uid  <- lift requireAuthId
     user <- lift requireUser
 
     (typeRes, typeView)      <- mreq (selectField $ exerciseTypes uid) (bfs ("Exercise Type" :: Text)) Nothing
-    (weightRes, weightView)  <- mreq intField (bfs ("Weight"::Text)) Nothing
-    (repsRes, repsView)      <- mreq intField (bfs ("Reps"::Text)) Nothing
+    (weightRes, weightView)  <- mreq exWeightField (bfs ("Weight"::Text)) Nothing
+    (repsRes, repsView)      <- mreq (checkBool (> 0) ("Number of reps must be positive"::Text) intField)
+                                     (bfs ("Reps"::Text))
+                                     Nothing
+
     time <- lift (liftIO getCurrentTime)
     let weightPref = show . userWeightPref $ user
 
@@ -112,5 +102,24 @@ logExerciseFormM extra = do
 
 
 
+exWeightField :: Field (HandlerT App IO) Weight
+exWeightField = checkBool (>= 0) ("The weight must be non-negative"::Text) $ Field
+    {
+        fieldParse  = \t _f -> do
+            u <- requireUser 
+            case t of
+                [v] ->
+                    case Data.Text.Read.double v of
+                        Right (a,"") -> case (userWeightPref u) of
+                            Kg  -> f a 
+                            Lbs -> f . lbs2kg $ a 
+                            where f = return . Right . Just . Kilograms
+                        _ -> return . Left . SomeMessage $ ("The weight must be a number!"::Text)
+                _  -> return . Left . SomeMessage $ ("Error"::Text)
 
-
+      , fieldView = \theId name attrs val isReq -> toWidget
+        [hamlet|$newline never
+            <input id="#{theId}" name="#{name}" *{attrs} :isReq:required>
+        |]
+      , fieldEnctype = UrlEncoded
+    }
