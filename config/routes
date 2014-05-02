@@ -13,3 +13,4 @@
 /workouts                          WorkoutsR GET POST
 /workouts/#ExerciseId              ExerciseR GET
 /settings                          SettingsR GET POST
+/log LogR GET POST

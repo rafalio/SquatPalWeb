@@ -4,23 +4,12 @@ module Handler.Workouts where
 
 import Import
 import Yesod.Auth
-import Data.Time
-import Control.Arrow
 import qualified Database.Esqueleto as E
 
 getWorkoutsR :: Handler Html
 getWorkoutsR = do
-   userId <- requireAuthId 
-   exercises <- runDB $ selectList [ExerciseUserId ==. userId] []
-   (logNewExerciseFormWidget, enctype) <- generateFormPost (logExerciseForm userId)
    defaultLayout $ do
        workouts
-       [whamlet|
-           <div class="col-lg-6">
-              <form method=post action=@{WorkoutsR} class="form-horizontal">
-                  ^{logNewExerciseFormWidget}
-        |]
-
 
 workouts :: Widget
 workouts = do
@@ -33,10 +22,6 @@ workouts = do
     |]
 
 
-entityVal2 = map f2
-  where f2 (a,b) = (entityVal a, entityVal b)
-{-entityVal3 (a,b,c) = (entityVal a, entityVal b, entityVal c)-}
-
 currentUserWorkouts = requireAuthId >>= exercisesForUserId
 
 exercisesForUserId uid = runDB $ 
@@ -45,29 +30,5 @@ exercisesForUserId uid = runDB $
     return (e,et)
 
 
-hConfig = BootstrapHorizontalForm (ColMd 2) (ColMd 4) (ColXs 2) (ColXs 3)
-
-logExerciseForm :: UserId -> Form Exercise
-logExerciseForm uid = renderBootstrap3 hConfig $ Exercise <$>
-        pure uid <*>
-        areq (selectField exerciseTypes) (bfs ("Exercise Type"::Text)) Nothing <*>
-        areq intField ("Weight") Nothing <*>
-        areq intField "Reps" Nothing <*>
-        aopt textareaField "Notes" Nothing <*>
-        lift (liftIO getCurrentTime) <*
-        (bootstrapSubmit ("add" :: BootstrapSubmit Text))
-        where
-            exerciseTypes = do
-                exercisesForUser <- runDB $ selectList [ExerciseTypeCreatedBy ==. uid] []
-                optionsPairs $ map ((exerciseTypeName . entityVal) &&& entityKey) exercisesForUser
-
 postWorkoutsR :: Handler Html
-postWorkoutsR = do
-    uid <- requireAuthId
-    ((result, widget),enctype) <- runFormPost (logExerciseForm uid)
-    case result of
-        FormSuccess newExercise -> do
-            runDB (insert newExercise)
-            setMessage "Succesfuly added your exercise!"
-        _ -> setMessage "There was a problem making your exercise"
-    redirect WorkoutsR 
+postWorkoutsR = error "undefined yet"

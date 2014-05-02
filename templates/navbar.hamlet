@@ -11,7 +11,9 @@
             $if loggedIn
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href=@{WorkoutsR}>Workouts
+                        <a href=@{LogR}>Log Exercise
+                    <li>
+                        <a href=@{WorkoutsR}>All Workouts
                     <li>
                         <a href=@{SettingsR}>Settings
                     <li>
