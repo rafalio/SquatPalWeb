@@ -10,7 +10,6 @@ import qualified Data.Text.Read
 getLogR :: Handler Html
 getLogR = do
     userId <- requireAuthId 
-    {-(logNewExerciseFormWidget, enctype) <- generateFormPost (logExerciseForm userId)-}
     (logNewExerciseFormWidget, enctype) <- generateFormPost logExerciseFormM
     defaultLayout $ do
         toWidget [lucius|
@@ -26,7 +25,6 @@ getLogR = do
                  <div.form-group>
                      <button.btn.btn-success>Log it!
         |]
-
 
 postLogR :: Handler Html
 postLogR = do 

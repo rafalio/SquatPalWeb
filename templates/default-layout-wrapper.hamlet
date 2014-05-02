@@ -20,20 +20,21 @@ $newline never
           document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
 
     <body>
+        <div#wrap>
+            ^{navbar}
 
-       ^{navbar}
+            <div#content class="container">
+                   ^{pageBody pc}
 
-       <div#content class="container">
-            <div>
-              ^{pageBody pc}
-           <footer>
+        <footer>
+            <div.container>
                 ^{footer}
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script src="/static/js/bootstrap.min.js">
 
         $maybe analytics <- extraAnalytics $ appExtra $ settings master
-            <script>
+           <script>
               if(!window.location.href.match(/localhost/)){
                 window._gaq = [['_setAccount','#{analytics}'],['_trackPageview'],['_trackPageLoadTime']];
                 (function() {

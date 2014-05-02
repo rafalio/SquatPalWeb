@@ -14,8 +14,8 @@ getSettingsR = do
 
     defaultLayout $ do
         [whamlet|
-<div.row>
-    <h3> Your exercises
+    <h2> Settings
+    <h4> Your exercises
     $forall (Entity id (ExerciseType name _ _)) <- yourExercises
         <div.row>
             <div.col-xs-5>
@@ -29,7 +29,6 @@ getSettingsR = do
                 ^{widget}
             <div.col-xs-2>
                 <button.btn.btn-success>Add!
-<div.row>
     <form.form-inline method=post action=@{SettingsR}>
             Weight preference ^{form}
             <button.btn.btn-default type=submit>Update
