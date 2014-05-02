@@ -4,12 +4,12 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET
-/about                       AboutR GET
+/                                  HomeR GET
+/about                             AboutR GET
 
-/exerciseTypes                 ExerciseTypeR GET POST
-/exerciseTypes/#ExerciseTypeId ExerciseTypeSingleR GET DELETE
+/exerciseTypes                     ExerciseTypeR POST
+/exerciseTypes/#ExerciseTypeId     ExerciseTypeSingleR DELETE
 
-/workouts                    WorkoutsR GET POST
-/workouts/#ExerciseId        ExerciseR GET
-/settings SettingsR GET POST
+/workouts                          WorkoutsR GET POST
+/workouts/#ExerciseId              ExerciseR GET
+/settings                          SettingsR GET POST

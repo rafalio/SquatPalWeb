@@ -13,8 +13,6 @@
                     <li>
                         <a href=@{WorkoutsR}>Workouts
                     <li>
-                        <a href=@{ExerciseTypeR}>Exercise types
-                    <li>
                         <a href=@{SettingsR}>Settings
                     <li>
                         <a href=@{AboutR}>About
