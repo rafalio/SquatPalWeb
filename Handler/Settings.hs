@@ -14,33 +14,39 @@ getSettingsR = do
 
     defaultLayout $ do
         [whamlet|
-        <div.well>
-            <form method=post action=@{SettingsR}>
-                ^{form}
-                <button>Change
-             <form method=post action=@{ExerciseTypeR} enctype=#{enctype1}>
-                 ^{widget}
-                 <button>Submit
-             <p> Your exercises:
-             $forall (Entity id (ExerciseType name _ _)) <- yourExercises
-                 #{name}
-                 <form style="display:inline" method=post action=@{ExerciseTypeSingleR id}?_method=DELETE>
-                   <button>Delete
-                 <br />
-         |]
+<div.row>
+    <h3> Your exercises
+    $forall (Entity id (ExerciseType name _ _)) <- yourExercises
+        <div.row>
+            <div.col-xs-5>
+                <div.well.well-sm> #{name}
+            <div.col-xs-2>
+                <form style="display:inline" method=post action=@{ExerciseTypeSingleR id}?_method=DELETE>
+                    <button.btn.btn-danger>Delete
+    <form method=post action=@{ExerciseTypeR} enctype=#{enctype1}>
+        <div.row>
+            <div.col-xs-5>
+                ^{widget}
+            <div.col-xs-2>
+                <button.btn.btn-success>Add!
+<div.row>
+    <form.form-inline method=post action=@{SettingsR}>
+            Weight preference ^{form}
+            <button.btn.btn-default type=submit>Update
+ |]
 
 exerciseTypeForm :: Form ExerciseType
-exerciseTypeForm = renderDivs $ ExerciseType <$> 
-    areq textField "Exercise Name" Nothing <*>
+exerciseTypeForm = renderBootstrap3 BootstrapInlineForm $ ExerciseType <$> 
+    areq textField (bfs ("Exercise Name"::Text)) Nothing <*>
     lift requireAuthId <*>
     pure WithWeight
 
 
 weightPrefForm :: Maybe User -> Form WeightPref
-weightPrefForm mu = renderDivs $ 
+weightPrefForm mu = renderBootstrap3 BootstrapInlineForm $ 
     areq 
         (selectFieldList enumTypeTuples)
-        "Weight unit" 
+        (bfs ("Weight unit"::Text))
         (userWeightPref <$> mu)
 
 postSettingsR :: Handler Html
