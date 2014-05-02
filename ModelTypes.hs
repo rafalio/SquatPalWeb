@@ -16,9 +16,8 @@ data WeightPref = Kg | Lbs
 derivePersistField("WeightPref")
 
 
+-- Maybe use this later, for things like pullups. How to solve
+-- issue with things like weighted pull-ups?
 data ExKind = WithWeight | NoWeight
     deriving (Show, Read, Eq, Enum, Bounded)
 derivePersistField("ExKind")
-
-
-{-type Weight = Int-}

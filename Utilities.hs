@@ -16,5 +16,3 @@ entityVal2 = map f2
 
 entityVal3 = map f3
     where f3 (a,b,c) = (entityVal a, entityVal b, entityVal c)
-
-
