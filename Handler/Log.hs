@@ -73,19 +73,19 @@ logExerciseFormM extra = do
            }
        |]
         [whamlet|
-#{extra}
-<div.form-group>
-    ^{fvInput typeView}
-<div.form-group #weightDiv>
-    <div.input-group>
-        ^{fvInput weightView}
-        <span.input-group-addon>#{weightPref}
-<span>
-    X
-<div.form-group #repsDiv>
-    <div.input-group>
-        ^{fvInput repsView}
-        <span.input-group-addon>reps
+          #{extra}
+          <div.form-group>
+              ^{fvInput typeView}
+          <div.form-group #weightDiv>
+              <div.input-group>
+                  ^{fvInput weightView}
+                  <span.input-group-addon>#{weightPref}
+          <span>
+              X
+          <div.form-group #repsDiv>
+              <div.input-group>
+                  ^{fvInput repsView}
+                  <span.input-group-addon>reps
         |]
     return (logRes, widget)
     where

@@ -15,5 +15,6 @@ Staging:
   <<: *defaults
 
 Production:
-  #approot: "http://www.example.com"
+  approot: "http://squatpal.com"
+  port: 80
   <<: *defaults
