@@ -9,8 +9,7 @@ import qualified Data.Text.Read
 
 getLogR :: Handler Html
 getLogR = do
-    userId <- requireAuthId 
-    (logNewExerciseFormWidget, enctype) <- generateFormPost logExerciseFormM
+    (logNewExerciseFormWidget, _) <- generateFormPost logExerciseFormM
     defaultLayout $ do
         toWidget [lucius|
             form#logExercise div{
@@ -28,14 +27,10 @@ getLogR = do
 
 postLogR :: Handler Html
 postLogR = do 
-    uid  <- requireAuthId
-    user <- requireUser
-    ((result, widget),enctype) <- runFormPost logExerciseFormM
-    let weightPref = userWeightPref user
-
+    ((result, _),_) <- runFormPost logExerciseFormM
     case result of
         FormSuccess newExercise -> do
-            runDB (insert newExercise)
+            _ <- runDB $ insert newExercise
             setMessageT MsgSuccess "Succesfuly added your exercise!"
         FormFailure ts -> setMessageT MsgError (toHtml . mconcat $ ts)
         _ -> setMessageT MsgError "There was a problem saving your exercise"

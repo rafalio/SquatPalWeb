@@ -5,9 +5,7 @@ import Prelude
 import Text.Blaze
 import qualified Text.Blaze.Html5 as Blaze
 import qualified Text.Blaze.Html5.Attributes as Blaze
-import Text.Blaze.Renderer.Utf8
 import Data.Monoid
-import Data.List
 
 
 data NotificationMsgType = MsgSuccess | MsgInfo | MsgWarning | MsgError

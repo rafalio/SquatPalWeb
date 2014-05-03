@@ -63,8 +63,7 @@ postSettingsR = do
 
 postExerciseTypeR :: Handler Html
 postExerciseTypeR = do
-    ((result, widget),enctype) <- runFormPost exerciseTypeForm 
-    userId <- requireAuthId
+    ((result, _),_) <- runFormPost exerciseTypeForm 
     case result of
         FormSuccess extype -> do
             runDB (insertUnique extype) >>= maybe 
