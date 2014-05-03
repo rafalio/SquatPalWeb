@@ -15,7 +15,7 @@ workouts :: Widget
 workouts = do
     both <- handlerToWidget $ currentUserWorkouts
     [whamlet|
-        <p> Your past exercises:
+        <h2> All Workouts
         $forall (e,et) <- entityVal2 both
             <div.well>
                 #{exerciseTypeName et} #{exerciseReps e} x #{unKilo (exerciseWeight e)}
