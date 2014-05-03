@@ -80,6 +80,7 @@ library
                  , esqueleto
                  , blaze-markup 
                  , blaze-html
+                 , old-locale
 
 executable         squatPal
     if flag(library-only)
