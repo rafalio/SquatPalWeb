@@ -156,6 +156,19 @@ instance YesodAuth App where
                     }
 
 
+    authLayout w = defaultLayout $ do
+        toWidget [lucius|
+            div.loginBlock{
+                padding-top: 70px;
+                text-align: center;
+            }
+        |]
+        [whamlet|
+        <h1> Login
+        <p> For your security and simplicity, we only provide login via Mozilla Persona and Google Mail. This way you do not have to register with a password for yet another service.
+        <div.loginBlock> ^{w}
+        |]
+
     {-getAuthId = return . Just . credsIdent-}
 
     {-maybeAuthId = lookupSession "_ID"-}
