@@ -1,0 +1,27 @@
+Default: &defaults
+  user: rafal
+  password: password
+  host: localhost
+  port: 5432
+  database: squatPal
+  poolsize: 10
+
+Development:
+  database: squatPal_dev
+  <<: *defaults
+
+Testing:
+  database: postgrestest_test
+  <<: *defaults
+
+Staging:
+  database: postgrestest_staging
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  user: dbsquatpal
+  password: db123pass
+  database: squatPal_prod 
+  poolsize: 100
+  <<: *defaults

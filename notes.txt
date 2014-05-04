@@ -17,3 +17,10 @@ UserExercise
    userId             UserId
    exerciseTypeId     ExerciseTypeId
    UniqueUserExercise userId exerciseTypeId
+
+
+
+
+pass for db account on host: dbuserpass
+
+pass for user db for postgres access
