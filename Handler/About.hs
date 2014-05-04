@@ -4,4 +4,5 @@ import Import
 
 getAboutR :: Handler Html
 getAboutR = defaultLayout $ do
+  setTitle "SquatPal | About"
   $(widgetFile "about")

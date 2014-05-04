@@ -1,1 +1,9 @@
-<h1>Welcome from squat pal
+<h1>Welcome to SquatPal
+
+<div.bigText>
+    <p> SquatPal is a minimalistic app to track your workouts.
+
+    <p> There is no cluttered pre-set exercise list – you set up your own customized exercise list.
+
+    <p> To begin, login, and set up some exercises on the
+        <a href=@{SettingsR}> Settings page.

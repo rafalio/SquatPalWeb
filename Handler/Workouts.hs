@@ -13,6 +13,7 @@ import System.Locale
 getWorkoutsR :: Handler Html
 getWorkoutsR = do
    defaultLayout $ do
+       setTitle "SquatPal: Workouts"
        workouts
 
 workouts :: Widget

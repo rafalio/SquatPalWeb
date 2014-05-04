@@ -12,7 +12,9 @@ getSettingsR = do
     (widget, enctype2) <- generateFormPost exerciseTypeForm 
     yourExercises <- runDB $ selectList [ExerciseTypeCreatedBy ==. userId] []
 
+
     defaultLayout $ do
+        setTitle "SquatPal | Settings"
         [whamlet|
     <h2> Settings
     <h4> Your exercises

@@ -11,6 +11,7 @@ getLogR :: Handler Html
 getLogR = do
     (logNewExerciseFormWidget, _) <- generateFormPost logExerciseFormM
     defaultLayout $ do
+        setTitle "SquatPal | Log your workout"
         toWidget [lucius|
             form#logExercise div{
                 padding: 5px; 
