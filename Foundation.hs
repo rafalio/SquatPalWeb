@@ -19,6 +19,7 @@ import Settings.StaticFiles
 import Settings (widgetFile, Extra (..))
 import Model
 import ModelTypes
+import Notifications
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
@@ -169,9 +170,7 @@ instance YesodAuth App where
         <div.loginBlock> ^{w}
         |]
 
-    {-getAuthId = return . Just . credsIdent-}
-
-    {-maybeAuthId = lookupSession "_ID"-}
+    onLogin = setMessageT MsgSuccess "Logged in successfuly!"
 
     -- You can add other plugins like BrowserID, email or OAuth here
     authPlugins _ = [authBrowserId def, authGoogleEmail]

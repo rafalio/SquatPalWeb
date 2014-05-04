@@ -58,6 +58,7 @@ currentUserWorkouts = requireAuthId >>= exercisesForUserId
 exercisesForUserId uid = runDB $ 
     E.select $ E.from $ \(e,et) -> do
     E.where_ ( (e E.^. ExerciseUserId E.==. E.val uid) E.&&. (e E.^. ExerciseKindId E.==. et E.^. ExerciseTypeId) )
+    E.orderBy [E.desc (e E.^. ExerciseStarted)]
     return (e,et)
 
 
