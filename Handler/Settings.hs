@@ -20,20 +20,24 @@ getSettingsR = do
     <h4> Your exercises
     $forall (Entity id (ExerciseType name _ _)) <- yourExercises
         <div.row>
-            <div.col-xs-5>
+            <div.col-xs-9.col-sm-5>
                 <div.well.well-sm> #{name}
-            <div.col-xs-2>
+            <div.col-xs-3.col-sm-2>
                 <form style="display:inline" method=post action=@{ExerciseTypeSingleR id}?_method=DELETE>
                     <button.btn.btn-danger>Delete
     <form method=post action=@{ExerciseTypeR} enctype=#{enctype1}>
         <div.row>
-            <div.col-xs-5>
+            <div.col-xs-9.col-sm-5>
                 ^{widget}
-            <div.col-xs-2>
+            <div.col-xs-3.col-sm-2>
                 <button.btn.btn-success>Add!
+    <br />
     <form.form-inline method=post action=@{SettingsR}>
-            Weight preference ^{form}
-            <button.btn.btn-default type=submit>Update
+        <div.row>
+            <div.col-xs-5.col-md-3>
+                Weight preference ^{form}
+            <div.col-xs-3.col-md-2>
+                <button.btn.btn-default type=submit>Update
  |]
 
 exerciseTypeForm :: Form ExerciseType
