@@ -52,13 +52,21 @@ workouts = do
         }
     |]
     [whamlet|
-        <h2> All Workouts
-        $forall w <- workouts
-            <div.row>
-                <div.col-xs-6>
-                    <div.well.well-sm.workoutEntry>
-                         #{show w}
-   |]
+  <h2> All Workouts
+  $forall w <- workouts
+      <div.row>
+          <div.col-sm-10>
+              <h4> #{prettyShowTime (workoutDate w)}
+              $forall s <- workoutExercises w
+                  <div.row>
+                      <div.col-sm-9.col-sm-offset-1>
+                          <h3> #{exerciseTypeName (setType s)}
+                          $forall e <- setExercises s
+                              <div.row>
+                                  <div.col-sm-8.col-sm-offset-1>
+                                      <div.well.well-sm>
+                                          <p> #{exerciseTypeName (setType s)} #{exerciseReps e} x #{prettyShowWeight (weightForPref wPref (exerciseWeight e))} #{show wPref}
+    |]
 
 prettyShowTime :: UTCTime -> String
 prettyShowTime = formatTime defaultTimeLocale "%F"
