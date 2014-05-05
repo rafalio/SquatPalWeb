@@ -14,7 +14,7 @@ ExerciseType
   createdBy     UserId
   kind          ExKind
   UniqueExerciseType name createdBy
-  deriving (Show)
+  deriving      Show Eq
 Exercise
   userId       UserId
   kindId       ExerciseTypeId
@@ -22,6 +22,6 @@ Exercise
   reps         Int
   notes        Textarea Maybe
   started      UTCTime
-  deriving (Show)
+  deriving     Show Eq
 
  -- By default this file is used in Model.hs (which is imported by Foundation.hs)
