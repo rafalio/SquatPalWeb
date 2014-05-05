@@ -13,7 +13,11 @@ import Data.Time.Calendar
 import Data.Function (on)
 import qualified Data.List as L
 import Data.Maybe
-
+import Text.Blaze
+import Text.Blaze.Html5 as H hiding (map)
+import Text.Blaze.Html5.Attributes hiding (map)
+import Text.Lucius (CssUrl, luciusFile, luciusFileDebug, renderCss)
+import Control.Monad
 
 data ExerciseSet = ExerciseSet {
     setDate :: UTCTime,
@@ -34,7 +38,17 @@ getWorkoutsR = do
 
 
 
+exerciseToBox :: Exercise -> WeightPref -> Html
+exerciseToBox e wPref = html $ do
+  H.div ! class_ "well exerciseBox well-sm" $ do
+    H.p $ H.toHtml . exerciseReps $ e
+    H.hr
+    H.p $ H.toHtml $ (prettyShowWeight (weightForPref wPref (exerciseWeight e))) ++ " " ++ (show wPref)
 
+
+exerciseRow :: [Exercise] -> WeightPref -> Html
+exerciseRow es w = html $ do
+    H.div ! class_ "row" $ sequence_ $ L.intersperse (H.span ">>") ( map (flip exerciseToBox $ w) es)
 
 
 workouts :: Widget
@@ -51,6 +65,7 @@ workouts = do
             }
         }
     |]
+    toWidget ($(luciusFile "templates/workouts.lucius"))
     [whamlet|
   <h2> All Workouts
   $forall w <- workouts
@@ -61,11 +76,7 @@ workouts = do
                   <div.row>
                       <div.col-sm-9.col-sm-offset-1>
                           <h3> #{exerciseTypeName (setType s)}
-                          $forall e <- setExercises s
-                              <div.row>
-                                  <div.col-sm-8.col-sm-offset-1>
-                                      <div.well.well-sm>
-                                          <p> #{exerciseTypeName (setType s)} #{exerciseReps e} x #{prettyShowWeight (weightForPref wPref (exerciseWeight e))} #{show wPref}
+                          #{exerciseRow (setExercises s) wPref}
     |]
 
 prettyShowTime :: UTCTime -> String
@@ -86,7 +97,7 @@ currentUserWorkouts :: Handler [Workout]
 currentUserWorkouts = do
     both <- currentUserExerciseList
     let exsByDay = filter (not . null) $ unsafeArrange2 (entityVal2 both) groupExercises
-    return $ map toWorkout exsByDay
+    return $ map (toWorkout) exsByDay
     where
         toSet :: [(Exercise,ExerciseType)] -> ExerciseSet
         toSet xs = ExerciseSet {
@@ -111,7 +122,6 @@ currentUserWorkouts = do
         }
 
 groupExercises :: [Exercise] -> [[Exercise]]
-{-groupExercises es = L.groupBy (\a b -> (diffUTCTime (exerciseStarted a) (exerciseStarted b)) < maxSecondsDiff) sorted-}
 groupExercises es = L.groupBy (  ( (<maxSecondsDiff) . ) . (diffUTCTime `on` exerciseStarted)) sorted
     where sorted = reverse $ L.sortBy (compare `on` exerciseStarted) es
           maxSecondsDiff = 400*60
@@ -144,7 +154,7 @@ postWorkoutsR :: Handler Html
 postWorkoutsR = error "undefined yet"
 
 
-
+-- deletes everything and adds some data to DB
 clear1 = do
     u <- requireAuthId
     t <- liftIO getCurrentTime

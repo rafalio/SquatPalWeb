@@ -1,0 +1,16 @@
+div.exerciseBox{
+    width: 100px;
+    font-size: 1.4em;
+    text-align: center;
+    padding: 5px;
+    display: inline-block;
+
+    hr{
+      border-top: 1px solid rgb(115, 126, 145);
+      margin: 5px;
+    }
+
+    p{
+      margin: 0;
+    }
+}
