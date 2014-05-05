@@ -19,12 +19,12 @@ data ExerciseSet = ExerciseSet {
     setDate :: UTCTime,
     setType :: ExerciseType,
     setExercises :: [Exercise]
-}
+} deriving (Show)
 
 data Workout = Workout {
     workoutDate :: UTCTime,
     workoutExercises :: [ExerciseSet]
-}
+} deriving (Show)
 
 getWorkoutsR :: Handler Html
 getWorkoutsR = do
@@ -39,10 +39,8 @@ getWorkoutsR = do
 
 workouts :: Widget
 workouts = do
-    workout <- handlerToWidget $ currentUserWorkout
+    workouts <- handlerToWidget $ currentUserWorkouts
     wPref <- handlerToWidget $ userWeightPref <$> requireUser
-    let exs = unsafeArrange2 (entityVal2 both) groupExercises
-    liftIO $ mapM_ print exs
     toWidget $ [lucius|
         div.workoutEntry{
             padding-top: 0px;
@@ -55,13 +53,12 @@ workouts = do
     |]
     [whamlet|
         <h2> All Workouts
-        $forall 
+        $forall w <- workouts
             <div.row>
                 <div.col-xs-6>
                     <div.well.well-sm.workoutEntry>
-                        <h6> #{prettyShowTime (exerciseStarted e)}
-                        <h3> #{exerciseTypeName et} #{exerciseReps e} x #{prettyShowWeight (weightForPref wPref (exerciseWeight e))} #{show wPref}
-    |]
+                         #{show w}
+   |]
 
 prettyShowTime :: UTCTime -> String
 prettyShowTime = formatTime defaultTimeLocale "%F"
@@ -81,8 +78,7 @@ currentUserWorkouts :: Handler [Workout]
 currentUserWorkouts = do
     both <- currentUserExerciseList
     let exsByDay = filter (not . null) $ unsafeArrange2 (entityVal2 both) groupExercises
-    let sets = map toSet exs
-    return $ toWorkout sets
+    return $ map toWorkout exsByDay
     where
         toSet :: [(Exercise,ExerciseType)] -> ExerciseSet
         toSet xs = ExerciseSet {
@@ -90,11 +86,18 @@ currentUserWorkouts = do
             setType = type_ $ xs,
             setExercises = map fst xs
             }
+
         leader = fst . L.head
         type_  = snd . L.head
 
-        toWorkout :: [ExerciseSet] -> Workout
-        toWorkout sets = Workout {
+        toWorkout :: [(Exercise,ExerciseType)] -> Workout
+        toWorkout = lift2Workout . toSets
+
+        toSets :: [(Exercise,ExerciseType)] -> [ExerciseSet]
+        toSets = map toSet . (L.groupBy ( (==) `on`  snd))
+
+        lift2Workout :: [ExerciseSet] -> Workout 
+        lift2Workout sets = Workout {
             workoutDate      = setDate . L.head $ sets,
             workoutExercises = sets
         }
