@@ -73,9 +73,9 @@ workouts = do
           <div.col-sm-10>
               <h4> #{prettyShowTime (workoutDate w)}
               $forall s <- workoutExercises w
-                  <div.row>
-                      <div.col-sm-9.col-sm-offset-1>
-                          <h3> #{exerciseTypeName (setType s)}
+                  <div.pushRight>
+                      <h3> #{exerciseTypeName (setType s)}
+                      <div.pushRight>
                           #{exerciseRow (setExercises s) wPref}
     |]
 
@@ -113,7 +113,7 @@ currentUserWorkouts = do
         toWorkout = lift2Workout . toSets
 
         toSets :: [(Exercise,ExerciseType)] -> [ExerciseSet]
-        toSets = map toSet . (L.groupBy ( (==) `on`  snd))
+        toSets = reverse . map (toSet . reverse) . (L.groupBy ( (==) `on`  snd))
 
         lift2Workout :: [ExerciseSet] -> Workout 
         lift2Workout sets = Workout {

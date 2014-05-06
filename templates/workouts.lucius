@@ -4,6 +4,7 @@ div.exerciseBox{
     text-align: center;
     padding: 5px;
     display: inline-block;
+    margin: 0 10px;
 
     hr{
       border-top: 1px solid rgb(115, 126, 145);
@@ -13,4 +14,8 @@ div.exerciseBox{
     p{
       margin: 0;
     }
+}
+
+div.pushRight{
+    padding-left: 40px;
 }
