@@ -30,11 +30,16 @@ data Workout = Workout {
     workoutExercises :: [ExerciseSet]
 } deriving (Show)
 
-getWorkoutsR :: Handler Html
+getWorkoutsR :: Handler TypedContent
 getWorkoutsR = do
-   defaultLayout $ do
-       setTitle "SquatPal: Workouts"
-       workouts
+    email <- userIdent <$> requireUser
+    selectRep $ do
+       provideRep $ 
+         defaultLayout $ do
+             setTitle "SquatPal: Workouts"
+             workouts
+       provideRep $ do
+         return $ Import.object $ ["name" .= (email :: Text)]
 
 
 

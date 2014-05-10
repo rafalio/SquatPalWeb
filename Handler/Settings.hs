@@ -3,7 +3,7 @@ module Handler.Settings where
 import Import
 import Yesod.Auth
 
-getSettingsR :: Handler Html
+getSettingsR :: Handler TypedContent
 getSettingsR = do
     u <- requireUser
     (form,enctype1) <- generateFormPost $ weightPrefForm (Just u)
@@ -12,32 +12,38 @@ getSettingsR = do
     (widget, enctype2) <- generateFormPost exerciseTypeForm 
     yourExercises <- runDB $ selectList [ExerciseTypeCreatedBy ==. userId] []
 
+    selectRep $ do
+        provideRep $ do
+            return . object $
+                ["exercises"  .= yourExercises,
+                 "userData" .= u
+                ]
 
-    defaultLayout $ do
-        setTitle "SquatPal | Settings"
-        [whamlet|
-    <h2> Settings
-    <h4> Your exercises
-    $forall (Entity id (ExerciseType name _ _)) <- yourExercises
-        <div.row>
-            <div.col-xs-9.col-sm-5>
-                <div.well.well-sm> #{name}
-            <div.col-xs-3.col-sm-2>
-                <form style="display:inline" method=post action=@{ExerciseTypeSingleR id}?_method=DELETE>
-                    <button.btn.btn-danger>Delete
-    <form method=post action=@{ExerciseTypeR} enctype=#{enctype1}>
-        <div.row>
-            <div.col-xs-9.col-sm-5>
-                ^{widget}
-            <div.col-xs-3.col-sm-2>
-                <button.btn.btn-success>Add!
-    <br />
-    <form.form-inline method=post action=@{SettingsR}>
-        <div.row>
-            <div.col-xs-5.col-md-3>
-                Weight preference ^{form}
-            <div.col-xs-3.col-md-2>
-                <button.btn.btn-default type=submit>Update
+        provideRep $ defaultLayout $ do
+            setTitle "SquatPal | Settings"
+            [whamlet|
+        <h2> Settings
+        <h4> Your exercises
+        $forall (Entity id (ExerciseType name _ _)) <- yourExercises
+            <div.row>
+                <div.col-xs-9.col-sm-5>
+                    <div.well.well-sm> #{name}
+                <div.col-xs-3.col-sm-2>
+                    <form style="display:inline" method=post action=@{ExerciseTypeSingleR id}?_method=DELETE>
+                        <button.btn.btn-danger>Delete
+        <form method=post action=@{ExerciseTypeR} enctype=#{enctype1}>
+            <div.row>
+                <div.col-xs-9.col-sm-5>
+                    ^{widget}
+                <div.col-xs-3.col-sm-2>
+                    <button.btn.btn-success>Add!
+        <br />
+        <form.form-inline method=post action=@{SettingsR}>
+            <div.row>
+                <div.col-xs-5.col-md-3>
+                    Weight preference ^{form}
+                <div.col-xs-3.col-md-2>
+                    <button.btn.btn-default type=submit>Update
  |]
 
 exerciseTypeForm :: Form ExerciseType

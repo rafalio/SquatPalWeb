@@ -1,21 +1,21 @@
-User
+User json
     ident Text
     password Text Maybe
     weightPref WeightPref
     UniqueUser ident
     deriving Typeable
-Email
+Email 
     email Text
     user UserId Maybe
     verkey Text Maybe
     UniqueEmail email
-ExerciseType
+ExerciseType json
   name          Text
   createdBy     UserId
   kind          ExKind
   UniqueExerciseType name createdBy
   deriving      Show Eq
-Exercise
+Exercise json
   userId       UserId
   kindId       ExerciseTypeId
   weight       Weight
