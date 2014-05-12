@@ -5,6 +5,7 @@ import Yesod.Auth
 
 getSettingsR :: Handler TypedContent
 getSettingsR = do
+    uEntity <- requireAuth
     u <- requireUser
     (form,enctype1) <- generateFormPost $ weightPrefForm (Just u)
 
@@ -16,7 +17,7 @@ getSettingsR = do
         provideRep $ do
             return . object $
                 ["exercises"  .= yourExercises,
-                 "userData" .= u
+                 "userData" .= uEntity
                 ]
 
         provideRep $ defaultLayout $ do
