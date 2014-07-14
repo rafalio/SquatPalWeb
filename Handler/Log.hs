@@ -1,4 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric #-}
+
 module Handler.Log where
 
 import Import
@@ -6,6 +8,7 @@ import Yesod.Auth
 import Control.Arrow
 import Data.Time
 import qualified Data.Text.Read
+import GHC.Generics
 
 getLogR :: Handler Html
 getLogR = do
@@ -26,17 +29,48 @@ getLogR = do
                      <button.btn.btn-success>Log it!
         |]
 
-postLogR :: Handler Html
-postLogR = do 
-    ((result, _),_) <- runFormPost logExerciseFormM
-    case result of
-        FormSuccess newExercise -> do
-            _ <- runDB $ insert newExercise
-            setMessageT MsgSuccess "Succesfuly added your exercise!"
-        FormFailure ts -> setMessageT MsgError (toHtml . mconcat $ ts)
-        _ -> setMessageT MsgError "There was a problem saving your exercise"
-    redirect LogR
 
+-- what I get back from a JSON post, have to convert
+-- to Exercise
+
+data ExerciseAttr = ExerciseAttr {
+  attrReps :: Int,
+  attrKindId :: ExerciseTypeId,
+  attrWeight     :: Weight,
+  attrStarted    :: UTCTime
+} deriving (Eq,Show,Generic)
+
+instance ToJSON ExerciseAttr
+instance FromJSON ExerciseAttr
+
+
+exerciseAttrToExercise :: UserId -> ExerciseAttr -> Exercise
+exerciseAttrToExercise uid exAtr = Exercise {
+  exerciseUserId = uid,
+  exerciseKindId = attrKindId exAtr,
+  exerciseWeight = attrWeight exAtr,
+  exerciseReps   = attrReps exAtr,
+  exerciseNotes  = Nothing,
+  exerciseStarted = attrStarted exAtr
+}
+
+postLogR :: Handler TypedContent
+postLogR = selectRep $ do
+    provideRep $ do
+      ((result, _),_) <- runFormPost logExerciseFormM
+      case result of
+          FormSuccess newExercise -> do
+              _ <- runDB $ insert newExercise
+              setMessageT MsgSuccess "Succesfuly added your exercise!"
+          FormFailure ts -> setMessageT MsgError (toHtml . mconcat $ ts)
+          _ -> setMessageT MsgError "There was a problem saving your exercise"
+      redirect LogR :: Handler Html
+    provideRep $ do
+        uid <- requireAuthId
+        exercise <- return . (exerciseAttrToExercise uid) =<< requireJsonBody
+        liftIO (putStrLn.show $ exercise)
+        runDB $ insert exercise
+        return $ (object ["success" .= True])
 
 logExerciseFormM :: Form Exercise
 logExerciseFormM extra = do

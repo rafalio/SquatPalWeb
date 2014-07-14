@@ -82,6 +82,7 @@ library
                  , blaze-markup 
                  , blaze-html
                  , old-locale
+                 , http-types
 
 executable         squatPal
     if flag(library-only)
